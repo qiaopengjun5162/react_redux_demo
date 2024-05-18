@@ -30,6 +30,15 @@ const studentApi = createApi({
                 return response.data;
             },
             keepUnusedDataFor: 60 // 设置缓存时间，单位为秒，默认是0，表示不缓存
+        }),
+        deleteStudent: builder.mutation({
+            query: (id) => ({
+                url: `students/${id}`,
+                method: "DELETE",
+            }),
+            transformResponse: (response, meta, arg) => {
+                return response.data;
+            },
         })
 
     }),
@@ -40,6 +49,6 @@ const studentApi = createApi({
 // API 对象创建后，对象中会根据各种方法自动的生成对应的钩子函数
 // 通过这些钩子函数，可以来向服务器发送请求，获取数据，并对数据进行处理。
 // 钩子函数的命名规则 getStudents -> useGetStudentsQuery
-export const { useGetStudentsQuery, useGetStudentByIDQuery } = studentApi;
+export const { useGetStudentsQuery, useGetStudentByIDQuery, useDeleteStudentMutation } = studentApi;
 export default studentApi;
 

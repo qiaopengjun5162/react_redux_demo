@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
+import { useDeleteStudentMutation } from '../store/studentApi';
 import StudentForm from './StudentForm';
 
 
-const Student = ({ student: { id, attributes: { name, age, gender, address } } }) => {
+const Student = (props) => {
     const [isEdit, setIsEdit] = useState(false);
+
+    // useMutation 的钩子返回的是一个数组
+    // 数组中的第一个元素是 mutation 函数，第二个元素是 mutation 函数的执行结果
+    const [deleteStudent, { isSuccess, loading, error }] = useDeleteStudentMutation();
+
 
     // delete student
     const deleteHandler = () => {
-        // delete student
-
+        deleteStudent(props.student.id);
     }
 
     const cancelEdit = () => {
@@ -17,12 +22,12 @@ const Student = ({ student: { id, attributes: { name, age, gender, address } } }
 
     return (
         <>
-            {!isEdit &&
+            {(!isEdit && !isSuccess) &&
                 <tr>
-                    <td>{name}</td>
-                    <td>{gender}</td>
-                    <td>{age}</td>
-                    <td>{address}</td>
+                    <td>{props.student.attributes.name}</td>
+                    <td>{props.student.attributes.gender}</td>
+                    <td>{props.student.attributes.age}</td>
+                    <td>{props.student.attributes.address}</td>
                     <td>
                         <button className='btn btn-danger' onClick={deleteHandler}>Delete</button>
 
@@ -32,9 +37,11 @@ const Student = ({ student: { id, attributes: { name, age, gender, address } } }
                     </td>
                 </tr>
             }
-            {isEdit && <StudentForm studentId={{ id }} onCancel={cancelEdit} />}
-            {/* {loading && <tr><td colSpan={5}>正在删除数据...</td></tr>} */}
-            {/* {error && <tr><td colSpan={5}>删除数据失败...{error.message}</td></tr>} */}
+
+            {isSuccess && <tr><td colSpan={5}>删除成功</td></tr>}
+            {isEdit && <StudentForm stuId={props.student.id} onCancel={cancelEdit} />}
+            {loading && <tr><td colSpan={5}>正在删除数据...</td></tr>}
+            {error && <tr><td colSpan={5}>删除数据失败...{error.message}</td></tr>}
         </>
     )
 }

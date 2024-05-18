@@ -3,15 +3,15 @@ import { useGetStudentByIDQuery } from "../store/studentApi";
 import classes from "./StudentForm.module.css";
 
 const StudentForm = (props) => {
-    console.log(props, "props");
-    console.log(props.studentId, "studentId");
     const [inputData, setInputData] = useState({
         name: "",
         gender: "男",
         age: "",
         address: "",
     });
-    const { data: studentData, isSuccess } = useGetStudentByIDQuery(props.studentId.id);
+    const { data: studentData, isSuccess } = useGetStudentByIDQuery(props.stuId, {
+        skip: !props.stuId,
+    });
 
     useEffect(() => {
         if (isSuccess) {
@@ -20,7 +20,7 @@ const StudentForm = (props) => {
         }
 
 
-    }, [isSuccess])
+    }, [isSuccess, studentData])
 
 
     const handleChange = (e) => {

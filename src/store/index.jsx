@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { schoolReducer } from './schoolSlice'
 import { stuReducer } from './stuSlice'
 import studentApi from './studentApi'
+import { setupListeners } from '@reduxjs/toolkit/query'
 
 
 // https://redux.js.org/introduction/getting-started
@@ -45,6 +46,12 @@ const store = configureStore({
         return getDefaultMiddleware().concat(studentApi.middleware)
     }
 })
+
+// setupListeners 函数用于设置监听器，监听器会在状态发生变化时自动触发。
+// setupListeners 函数接收一个 dispatch 函数作为参数，用于触发 action。
+// setupListeners 函数会自动监听状态变化，并在状态发生变化时触发监听器。
+// 设置后，将会支持 refetchOnReconnect refetchOnFocus 等功能
+setupListeners(store.dispatch)
 
 export default store
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './App.module.css';
-import StudentList from './components/StudentList';
+import StudentList from './components/studentList';
 import { useGetStudentsQuery } from './store/studentApi';
 
 const App = () => {
@@ -28,7 +28,26 @@ const App = () => {
     // }
     // 调用API查询数据
     // 这个钩子函数它会返回一个对象作为返回值，请求过程中的相关数据都在该对象中存储
-    const { data: stuData, isSuccess, isLoading } = useGetStudentsQuery()
+    const result = useGetStudentsQuery(null, {
+        // 请求成功后，返回的数据存储在 result.data 中
+        // 请求是否成功的状态存储在 result.isSuccess 中
+        // 请求是否在加载中存储在 result.isLoading 中
+        // 请求是否出错存储在 result.isError 中
+        // selectFromResult: result => {
+        //     if (result.data) {
+        //         return result.data = result.data.filter(item => item.attributer.age <= 18)
+        //     }
+        // },
+        // 请求的配置 用来设置轮询的时间 单位是毫秒 
+        pollingInterval: 0,
+        skip: false, // 是否跳过本次请求
+        refetchOnMountOrArgChange: true, // 是否在组件挂载或参数变化时重新请求数据
+        refetchOnReconnect: true, // 是否在网络连接断开后重新请求数据
+        refetchOnWindowFocus: true, // 是否在窗口获取焦点时重新请求数据
+        refetchOnFocus: true, // 是否在组件获取焦点时重新请求数据
+    })
+    const { data: stuData, isSuccess, isLoading } = result;
+
 
     return (
         <div className={classes.App}>
