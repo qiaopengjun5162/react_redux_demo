@@ -1,7 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import classes from './App.module.css'
-import { setAddress as setSchoolAddress, setName as setSchoolName } from './store/schoolSlice'
 import { setAge, setName } from './store/stuSlice'
 import { useGetStudentsQuery } from './store/studentApi'
 
@@ -30,22 +29,23 @@ const App = () => {
     }
     // 调用API查询数据
     // 这个钩子函数它会返回一个对象作为返回值，请求过程中的相关数据都在该对象中存储
-    useGetStudentsQuery()
+    const { data, isSuccess, isLoading } = useGetStudentsQuery()
+    console.log(data);
     return (
         <div className={classes.App}>
             <h1 className={classes.title}>学生列表</h1>
             <table className={classes.table}>
                 <thead className={classes.thead}>
-                    <th>学校名称</th>
-                    <th>学校地址</th>
+                    {/* <th>学校名称</th> */}
+                    {/* <th>学校地址</th> */}
                     <th>姓名</th>
                     <th>年龄</th>
                     <th>性别</th>
                     <th>地址</th>
-                    <th>修改姓名</th>
-                    <th>修改年龄</th>
+                    {/* <th>修改姓名</th> */}
+                    {/* <th>修改年龄</th> */}
                 </thead>
-                <tbody className={classes.tbody}>
+                {/* <tbody className={classes.tbody}>
                     <tr>
                         <td>{school.name}</td>
                         <td>{school.address}</td>
@@ -62,10 +62,24 @@ const App = () => {
                         <button onClick={() => dispatch(setSchoolName('School'))} className={classes.btn}>update</button>
                         <button onClick={() => dispatch(setSchoolAddress('School address'))} className={classes.btn}>update</button>
                     </tr>
-                </tfoot>
+                </tfoot> */}
 
+
+                <tbody className={classes.tbody}>
+
+                    {isLoading && <div>Loading...</div>}
+
+                    {isSuccess && data.data.map(item => {
+                        return <tr key={item.id}>
+                            <td>{item.attributes.name}</td>
+                            <td>{item.attributes.age}</td>
+                            <tr>{item.attributes.gender}</tr>
+                            <td>{item.attributes.address}</td>
+                        </tr>
+                    })}
+
+                </tbody>
             </table>
-
         </div>
     )
 }
